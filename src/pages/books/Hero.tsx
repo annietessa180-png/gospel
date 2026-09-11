@@ -156,7 +156,7 @@ export default function Hero() {
 
         {/* Available on */}
         <p className="mt-6 text-xs sm:text-sm text-[#D0D3D8]/70 tracking-widest uppercase">
-          Available on · Amazon · Barnes &amp; Noble · InHimDaily.org
+          Available on · InHimDaily.org
         </p>
 
         {/* Scripture quote */}

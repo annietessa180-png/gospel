@@ -5,6 +5,7 @@ import { ArrowRight, BookOpen, Star, Check, X, Sparkles, ChevronRight, Mail, Cop
 import ScrollReveal from '@/components/ScrollReveal';
 import WhatsAppCommunity from '@/components/WhatsAppCommunity';
 import { insertFreeSampleLead, insertNewsletterSubscriber } from '@/lib/supabase';
+import { collections, testimonials as bookTestimonials } from '@/pages/books/assets';
 
 const todaysVerse = {
   reference: 'John 1:14',
@@ -55,11 +56,7 @@ const comparisonRows = [
   { feature: 'Daily prayer',                    traditional: true,           ihd: true },
 ];
 
-const testimonials = [
-  { quote: "For the first time in years, our whole family is talking about the same thing at dinner. Our kids actually ask us what we thought of the devotional.", author: "Jennifer M.", role: "Mother of three" },
-  { quote: "I've tried devotionals before but they always felt like homework. In Him Daily actually connects with where I am—and my parents are reading the same thing.", author: "Marcus T.", role: "High school student" },
-  { quote: "As a grandfather, I've prayed for years that my family would grow together in faith. In Him Daily is the answer to that prayer.", author: "Robert K.", role: "Grandfather" },
-];
+const testimonials = bookTestimonials.map(t => ({ quote: t.quote, author: t.author, role: '' }));
 
 const editions = [
   { label: 'Adult Edition', bg: 'bg-navy-700', text: 'text-white', sub: 'text-gold-300', title: 'Walking in the Light of His Presence', excerpt: "Jesus doesn't merely illuminate your path—He IS the light. This declaration calls us to walk in an entirely different quality of life.", features: ['Theological depth', 'Life application', 'Intercession prayer'] },
@@ -70,7 +67,7 @@ const editions = [
 const stats = [
   { number: '5,000+', label: 'Believers Growing Daily', sub: 'Across all communities' },
   { number: '12+',    label: 'Countries Reached',         sub: 'And expanding' },
-  { number: '240',    label: 'Days of Devotionals',      sub: 'Two complete series' },
+  { number: '600+',  label: 'Days of Devotionals',      sub: 'Six complete volumes' },
   { number: '3',      label: 'Generations Reading',      sub: 'Adults, teens, children' },
 ];
 
@@ -290,7 +287,7 @@ export default function HomePage() {
           <ScrollReveal className="text-center mb-14">
             <p className="ih-eyebrow mb-3">Latest Devotionals</p>
             <h2 id="latest-heading" className="font-playfair text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">Recent Encounters with Jesus</h2>
-            <p className="text-white/55 text-lg max-w-xl mx-auto">Fresh devotional content from Series One — I AM: 120 Names of Jesus.</p>
+            <p className="text-white/55 text-lg max-w-xl mx-auto">Fresh devotional content from our six-volume Christ-centred library.</p>
           </ScrollReveal>
           <div className="grid sm:grid-cols-2 gap-6">
             {latestDevotionals.map((d, i) => (
@@ -519,30 +516,26 @@ export default function HomePage() {
             <p className="text-white/55 text-lg max-w-xl mx-auto">Premium series crafted to take your family deeper into Jesus—one scripture at a time.</p>
           </ScrollReveal>
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              { series:'Series One', title:'I AM', sub:'120 Names of Jesus', days:120, available:true, img:'https://images.pexels.com/photos/1111319/pexels-photo-1111319.jpeg?auto=compress&cs=tinysrgb&w=600', desc:"A transformational journey through 120 names and titles of Jesus Christ—from Alpha to Omega, Bread of Life to King of Kings." },
-              { series:'Series Two', title:'Full of Grace and Truth', sub:'120 Gospel Encounters', days:120, available:false, img:'https://images.pexels.com/photos/415571/pexels-photo-415571.jpeg?auto=compress&cs=tinysrgb&w=600', desc:"Walk through the four Gospels in 120 powerful encounters with Jesus—see Him heal, teach, confront, and rise victorious." },
-              { series:'Series Three', title:'He Entered Before He Came', sub:'50 Days in Joshua', days:50, available:false, img:'https://images.pexels.com/photos/8108066/pexels-photo-8108066.jpeg?auto=compress&cs=tinysrgb&w=600', desc:"A 50-day journey through the book of Joshua, revealing how Christ was present long before He walked the earth—every battle, victory, and promise pointing to Him." },
-            ].map((s,i)=>(
+            {collections.slice(0, 3).map((s,i)=>(
               <ScrollReveal key={i} delay={i*120}>
                 <div className="premium-card rounded-2xl overflow-hidden ih-card">
-                  <div className="relative h-48 overflow-hidden">
-                    <img src={s.img} alt={s.title} loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+                  <div className="relative h-48 overflow-hidden bg-white/5">
+                    <img src={s.cover} alt={s.title} loading="lazy" decoding="async" className="w-full h-full object-contain transition-transform duration-500 hover:scale-105" />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#05070D]/80 to-transparent" aria-hidden="true" />
                     <div className="absolute bottom-4 left-4">
-                      <span className={`px-3 py-1 rounded-full text-[0.72rem] font-bold ${s.available ? 'bg-gold-500 text-[#05070D]' : 'bg-white/15 text-white backdrop-blur'}`}>
-                        {s.available ? 'Available Now' : 'Coming Soon'}
+                      <span className="px-3 py-1 rounded-full text-[0.72rem] font-bold bg-gold-500 text-[#05070D]">
+                        Available Now
                       </span>
                     </div>
                   </div>
                   <div className="p-7">
-                    <p className="text-gold-300 text-[0.68rem] font-bold tracking-[0.14em] uppercase mb-2">{s.series}</p>
+                    <p className="text-gold-300 text-[0.68rem] font-bold tracking-[0.14em] uppercase mb-2">{s.volume}</p>
                     <h3 className="font-playfair text-2xl font-bold text-white leading-tight">{s.title}</h3>
-                    <p className="text-gold-400 font-medium text-sm mb-3">{s.sub}</p>
-                    <p className="text-white/55 text-sm leading-relaxed mb-5">{s.desc}</p>
+                    <p className="text-gold-400 font-medium text-sm mb-3">{s.scripture}</p>
+                    <p className="text-white/55 text-sm leading-relaxed mb-5">{s.description}</p>
                     <div className="flex items-center justify-between">
                       <span className="text-[0.72rem] text-white/60 bg-white/10 px-3 py-1.5 rounded-full">{s.days} Days</span>
-                      <Link to="/devotionals" className="text-sm font-semibold text-gold-300 hover:text-gold-200 transition-colors flex items-center gap-1">
+                      <Link to="/books#collections" className="text-sm font-semibold text-gold-300 hover:text-gold-200 transition-colors flex items-center gap-1">
                         Learn more <ChevronRight size={14} aria-hidden="true" />
                       </Link>
                     </div>

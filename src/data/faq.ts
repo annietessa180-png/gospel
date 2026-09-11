@@ -14,7 +14,7 @@ export const faqCategories: FAQCategory[] = [
     items: [
       {
         q: 'What exactly is In Him Daily?',
-        a: 'In Him Daily is a daily devotional series designed to bring three generations of a family face to face with Jesus Christ — simultaneously, every day, each in language and depth appropriate for their age. Series One: Full of Grace and Truth covers 120 daily encounters with Jesus from the Gospels and the New Testament. Series Two covers a further 120 days. Each day is available in three editions: Adult, Teen (ages 13–18), and Children\u2019s (ages 5–12). Same encounter. Same Jesus. Three conversations.',
+        a: 'In Him Daily is a daily devotional series designed to bring three generations of a family face to face with Jesus Christ — simultaneously, every day, each in language and depth appropriate for their age. The series spans six volumes tracing Christ from Genesis to Revelation. Each day is available in three editions: Adult, Teen (ages 13–18), and Children\u2019s (ages 5–12). Same encounter. Same Jesus. Three conversations.',
       },
       {
         q: 'How long does each daily devotional take to read?',
@@ -30,7 +30,7 @@ export const faqCategories: FAQCategory[] = [
       },
       {
         q: 'Can I use In Him Daily if I am not a parent? Is it only for families?',
-        a: 'Absolutely. In Him Daily is for anyone who wants a daily encounter with Jesus that is theologically grounded and personally transforming. The three-generation design is the distinctive of the series — but every edition stands completely on its own. The Adult Edition is a full, rich, daily encounter with the Gospels that has been used by individuals, small groups, and churches as a personal or corporate devotional. Many users purchase only the Adult Edition and find it completely satisfying as a standalone daily practice.',
+        a: 'Absolutely. In Him Daily is for anyone who wants a daily encounter with Jesus that is theologically grounded and personally transforming. The three-generation design is the distinctive of the series — but every edition stands completely on its own. The Adult Edition is a full, rich, daily encounter with Scripture that has been used by individuals, small groups, and churches as a personal or corporate devotional. Many users purchase only the Adult Edition and find it completely satisfying as a standalone daily practice.',
       },
     ],
   },
@@ -60,15 +60,19 @@ export const faqCategories: FAQCategory[] = [
     items: [
       {
         q: 'Where can I get In Him Daily?',
-        a: 'The complete series is available at inhimdaily.org. You can download the free 7-day sample immediately from the homepage to try all three editions before purchasing. The complete Series One is available as a physical book and as a digital download. Series Two is also available. For church or institutional licensing — if you would like to use In Him Daily as the family discipleship curriculum for your church or school — please contact us directly through the website.',
+        a: 'The complete series is available at inhimdaily.org. You can download the free 7-day sample immediately from the homepage to try all three editions before purchasing. All six volumes are available as digital downloads, with physical editions coming soon. For church or institutional licensing — if you would like to use In Him Daily as the family discipleship curriculum for your church or school — please contact us directly through the website.',
+      },
+      {
+        q: 'How much do the devotionals cost?',
+        a: 'Each volume is available in three editions: Kids ($8), Teen ($10), and Adult ($12). The Complete Family Bundle — all three editions of a volume — is $25. Bulk discounts are available for churches and schools: 20% off for 5–20 bundles, 30% off for 21–50, and 40% off for 51+. All prices are listed in USD, with local currency equivalents available for Kenya, Nigeria, Ghana, South Africa, Uganda, and Tanzania.',
       },
       {
         q: 'Is there a digital version I can access on my phone or tablet?',
         a: 'Yes. In Him Daily is available as a digital download that can be read on any device — phone, tablet, laptop, or desktop. A dedicated app is in development for an even more seamless daily experience. In the meantime, the PDF digital edition is fully formatted for screen reading and can be downloaded immediately after purchase.',
       },
       {
-        q: 'Is there a subscription option for ongoing access?',
-        a: 'Yes. In Him Daily offers a monthly digital subscription that gives you access to the current daily devotional for all three editions, delivered fresh each day. This is ideal for families who want the daily experience without purchasing the full volumes upfront. Details of the subscription options are available at inhimdaily.org.',
+        q: 'Are physical books available?',
+        a: 'Physical editions of all six volumes are coming soon. In the meantime, the digital PDF editions are fully formatted for both screen reading and home printing. Sign up for our newsletter at inhimdaily.org to be notified when physical books become available.',
       },
       {
         q: 'Can our church or school use In Him Daily as a group curriculum?',
@@ -81,7 +85,7 @@ export const faqCategories: FAQCategory[] = [
     items: [
       {
         q: 'What is included in the free 7-day sample?',
-        a: 'The free 7-day sample includes the first seven complete daily devotionals of Series One in all three editions — Adult, Teen, and Children\u2019s. That is 21 complete devotional documents, each one a full daily encounter with Jesus from the opening of John\u2019s Gospel. The seven days cover: The Word Became Flesh, The Baptism of Jesus, The First Disciples (Come and See), Water into Wine, Nicodemus by Night, John 3:16, and He Revealed His Glory. Each edition also includes a cover page, an about section, and a back page with the full series overview.',
+        a: 'The free 7-day sample includes the first seven complete daily devotionals in all three editions — Adult, Teen, and Children\u2019s. That is 21 complete devotional documents, each one a full daily encounter with Jesus. The seven days cover: The Word Became Flesh, The Baptism of Jesus, The First Disciples (Come and See), Water into Wine, Nicodemus by Night, John 3:16, and He Revealed His Glory. Each edition also includes a cover page, an about section, and a back page with the full series overview.',
       },
       {
         q: 'Is the free sample really free? Do I need to give my credit card?',
@@ -89,7 +93,7 @@ export const faqCategories: FAQCategory[] = [
       },
       {
         q: 'What happens after the 7-day sample? Am I automatically subscribed or charged?',
-        a: 'Nothing automatic happens. After Day 7, you will receive an email with information about the complete series and how to access it. If you choose to purchase or subscribe, that is your decision and requires your deliberate action. You will not be charged automatically. You will not be spammed. We will send you occasional updates about new content, new volumes, and resources from In Him Daily — from which you can unsubscribe at any time.',
+        a: 'Nothing automatic happens. After Day 7, you will receive an email with information about the complete series and how to access it. If you choose to purchase, that is your decision and requires your deliberate action. You will not be charged automatically. You will not be spammed. We will send you occasional updates about new content, new volumes, and resources from In Him Daily — from which you can unsubscribe at any time.',
       },
     ],
   },
@@ -110,7 +114,7 @@ export const faqCategories: FAQCategory[] = [
       },
       {
         q: 'How can I stay connected with In Him Daily beyond the devotionals?',
-        a: 'The best way to stay connected is to subscribe to the In Him Daily community through the website. Subscribers receive the daily devotional, updates about new volumes and series, resources for family devotional life, and occasional reflections from the author on living the Word in the daily rhythms of family and faith. You can also follow In Him Daily on social media — links are available at inhimdaily.org. If you have a testimony about how In Him Daily has impacted your family, we would love to hear it — testimonies fuel the mission and we read every one.',
+        a: 'The best way to stay connected is to subscribe to the In Him Daily community through the website. Subscribers receive updates about new volumes and series, resources for family devotional life, and occasional reflections from the author on living the Word in the daily rhythms of family and faith. You can also join our WhatsApp communities for adults, teens, and families, and follow In Him Daily on social media — links are available at inhimdaily.org. If you have a testimony about how In Him Daily has impacted your family, we would love to hear it — testimonies fuel the mission and we read every one.',
       },
     ],
   },

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Heart, HandHeart } from 'lucide-react';
+import { Heart, HandHeart, Check, Globe, Shield, Mail } from 'lucide-react';
 import { useSEO } from '@/hooks/useSEO';
 import ScrollReveal from '@/components/ScrollReveal';
 import LocationFields, { type LocationData } from '@/components/LocationFields';
@@ -7,11 +7,19 @@ import { insertDonation } from '@/lib/supabase';
 
 const PRESET_AMOUNTS = [5, 10, 25, 50, 100];
 
+const paymentMethods = [
+  { label: 'Credit / Debit Card', desc: 'Visa, Mastercard, American Express', icon: 'card' },
+  { label: 'M-Pesa', desc: 'Safaricom M-Pesa (Kenya)', icon: 'phone' },
+  { label: 'Bank Transfer', desc: 'Direct bank transfer — details emailed to you', icon: 'bank' },
+  { label: 'PayPal', desc: 'Pay with your PayPal balance or linked card', icon: 'paypal' },
+];
+
 export default function DonatePage() {
   useSEO({
     title: 'Donate | In Him Daily',
     description: 'Partner with In Him Daily through your generosity. Your donation helps share Jesus with families across generations around the world.',
     canonicalPath: '/donate',
+    ogImage: 'https://inhimdaily.org/images/733127106_122096833941384062_9064072413288732878_n.jpg',
   });
 
   const [name, setName]           = useState('');
@@ -43,6 +51,10 @@ export default function DonatePage() {
       setFormError('Please fill in your name, email, and country.');
       return;
     }
+    if (!amount || amount < 1) {
+      setFormError('Please select or enter a donation amount.');
+      return;
+    }
     try {
       await insertDonation({
         name,
@@ -61,6 +73,7 @@ export default function DonatePage() {
 
   return (
     <div className="overflow-x-hidden">
+      {/* Hero */}
       <section className="relative pt-32 pb-24 bg-navy-700 overflow-hidden" aria-label="Donate hero">
         <div className="absolute inset-0 bg-cover bg-center" aria-hidden="true" style={{ backgroundImage: "url('https://images.pexels.com/photos/261763/pexels-photo-261763.jpeg?auto=compress&cs=tinysrgb&w=1920')", opacity: 0.2 }} />
         <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(180deg, rgba(14,32,53,0.78) 0%, rgba(14,32,53,0.92) 100%)' }} />
@@ -74,24 +87,78 @@ export default function DonatePage() {
           <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
             Support the Mission
           </h1>
-          <p className="text-white/65 text-xl max-w-2xl mx-auto leading-relaxed">
+          <p className="text-white/65 text-xl max-w-2xl mx-auto leading-relaxed mb-6">
             Your generosity helps share Jesus with families across generations around the world.
+          </p>
+          <p className="text-white/50 text-base max-w-2xl mx-auto leading-relaxed">
+            In Him Daily is a ministry of Epic True North, based in Nairobi, Kenya. Every gift — large or small — helps us
+            create Christ-centred devotionals, distribute free samples, and build communities where families encounter Jesus together.
           </p>
         </div>
       </section>
 
-      <section className="py-24 ih-section" aria-label="Donation form">
+      {/* How Your Gift Helps */}
+      <section className="py-16 ih-section" aria-label="How your gift helps">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal className="text-center mb-10">
+            <p className="ih-eyebrow mb-3">Your Impact</p>
+            <h2 className="font-playfair text-2xl md:text-3xl font-bold text-white mb-4">How Your Gift Helps</h2>
+          </ScrollReveal>
+          <div className="grid sm:grid-cols-3 gap-5">
+            {[
+              { title: 'Create Devotionals', desc: 'Fund the writing, design, and production of new volumes across all six collections.' },
+              { title: 'Reach More Families', desc: 'Help distribute free samples and build WhatsApp communities across the globe.' },
+              { title: 'Support the Ministry', desc: 'Sustain the ongoing work of Epic True North in Nairobi and beyond.' },
+            ].map((item, i) => (
+              <ScrollReveal key={i} delay={i * 80}>
+                <div className="p-6 rounded-2xl ih-card h-full">
+                  <div className="w-10 h-10 rounded-full bg-gold-400/15 border border-gold-400/25 flex items-center justify-center mb-4">
+                    <Heart size={18} className="text-gold-300" aria-hidden="true" />
+                  </div>
+                  <h3 className="font-playfair text-lg font-bold text-white mb-2">{item.title}</h3>
+                  <p className="text-white/55 text-sm leading-relaxed">{item.desc}</p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Donation Form / Thank You */}
+      <section className="py-20 ih-section" aria-label="Donation form">
         <div className="max-w-xl mx-auto px-4 sm:px-6">
           <ScrollReveal>
             {submitted ? (
-              <div className="p-8 rounded-2xl ih-card border-gold-400/30 animate-fade-in text-center">
-                <div className="w-14 h-14 rounded-full bg-gold-400/15 border border-gold-400/30 flex items-center justify-center mx-auto mb-5">
-                  <Heart size={24} className="text-gold-300 fill-gold-400/30" aria-hidden="true" />
+              <div className="p-8 md:p-10 rounded-2xl ih-card border-gold-400/30 animate-fade-in text-center">
+                <div className="w-16 h-16 rounded-full bg-green-500/20 border border-green-400/30 flex items-center justify-center mx-auto mb-6">
+                  <Check size={28} className="text-green-400" aria-hidden="true" />
                 </div>
-                <h2 className="font-playfair text-2xl font-bold text-white mb-3">Thank You for Partnering With Us</h2>
-                <p className="text-white/55 leading-relaxed">
-                  Thank you for partnering with In Him Daily. Your generosity helps share Jesus with families across generations around the world.
+                <h2 className="font-playfair text-2xl md:text-3xl font-bold text-white mb-4">Thank You for Partnering With Us</h2>
+                <p className="text-white/60 leading-relaxed mb-6">
+                  {name ? `${name}, ` : ''}thank you for your generosity{amount ? ` of $${amount}` : ''}. Your gift helps share Jesus
+                  with families across generations around the world. A confirmation email is on its way to {email || 'your inbox'}.
                 </p>
+                <div className="p-5 rounded-xl bg-white/5 border border-white/10 text-left mb-6">
+                  <p className="text-[0.68rem] font-bold text-gold-300 uppercase tracking-[0.12em] mb-2">What Happens Next</p>
+                  <ul className="space-y-2" role="list">
+                    <li className="flex items-start gap-2.5 text-sm text-white/60">
+                      <Check size={14} className="text-green-400 mt-0.5 shrink-0" aria-hidden="true" />
+                      You will receive a confirmation email with your donation details.
+                    </li>
+                    <li className="flex items-start gap-2.5 text-sm text-white/60">
+                      <Check size={14} className="text-green-400 mt-0.5 shrink-0" aria-hidden="true" />
+                      If you included a prayer request, our prayer team will be praying over it this week.
+                    </li>
+                    <li className="flex items-start gap-2.5 text-sm text-white/60">
+                      <Check size={14} className="text-green-400 mt-0.5 shrink-0" aria-hidden="true" />
+                      You will receive occasional ministry updates — you can unsubscribe anytime.
+                    </li>
+                  </ul>
+                </div>
+                <p className="font-cormorant text-lg text-gold-200 italic">
+                  &ldquo;Each of you should give what you have decided in your heart to give, not reluctantly or under compulsion, for God loves a cheerful giver.&rdquo;
+                </p>
+                <p className="text-gold-400 text-[0.72rem] font-semibold mt-2 tracking-[0.18em] uppercase">2 Corinthians 9:7</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="ih-card p-8 space-y-5" noValidate>
@@ -127,6 +194,27 @@ export default function DonatePage() {
                       aria-label="Custom donation amount"
                     />
                   </div>
+                </div>
+
+                {/* Payment method info */}
+                <div>
+                  <label className="block text-[0.72rem] font-semibold text-white/50 mb-2 tracking-wider uppercase">Payment Methods</label>
+                  <div className="grid sm:grid-cols-2 gap-2.5">
+                    {paymentMethods.map((m) => (
+                      <div key={m.label} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+                        <div className="w-8 h-8 rounded-lg bg-gold-400/15 flex items-center justify-center shrink-0">
+                          <Check size={14} className="text-gold-300" aria-hidden="true" />
+                        </div>
+                        <div>
+                          <p className="text-white text-xs font-semibold">{m.label}</p>
+                          <p className="text-white/40 text-[0.68rem]">{m.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-white/35 text-xs mt-2 flex items-center gap-1.5">
+                    <Shield size={11} aria-hidden="true" /> After submitting, you will receive an email with secure payment instructions for your preferred method.
+                  </p>
                 </div>
 
                 {/* Name & Email */}
@@ -167,17 +255,45 @@ export default function DonatePage() {
                 <button type="submit" className="w-full py-4 ih-btn-gold text-[0.9rem]">
                   <span className="inline-flex items-center gap-2 justify-center">
                     <Heart size={16} aria-hidden="true" />
-                    Donate {amount ? `$${amount}` : ''}
+                    {amount ? `Donate $${amount}` : 'Donate Now'}
                   </span>
                 </button>
                 {formError && <p className="text-red-400 text-xs text-center">{formError}</p>}
-                <p className="text-white/30 text-xs text-center">Your donation supports the ministry of In Him Daily.</p>
+                <p className="text-white/30 text-xs text-center flex items-center justify-center gap-1.5">
+                  <Shield size={11} aria-hidden="true" /> Your donation supports the ministry of In Him Daily. You will receive a confirmation email.
+                </p>
               </form>
             )}
           </ScrollReveal>
         </div>
       </section>
 
+      {/* Trust signals */}
+      <section className="py-14 ih-section" aria-label="Trust signals">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="grid sm:grid-cols-3 gap-5">
+            {[
+              { icon: Shield, title: 'Secure & Private', desc: 'Your information is never shared or sold.' },
+              { icon: Globe, title: 'Global Impact', desc: 'Donations reach families in 12+ countries.' },
+              { icon: Mail, title: 'Stay Informed', desc: 'Receive updates on how your gift is making a difference.' },
+            ].map((item, i) => (
+              <ScrollReveal key={i} delay={i * 80}>
+                <div className="flex items-start gap-3 p-5 rounded-2xl ih-card-solid">
+                  <div className="w-9 h-9 rounded-full bg-gold-400/15 flex items-center justify-center shrink-0">
+                    <item.icon size={16} className="text-gold-300" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-semibold mb-0.5">{item.title}</p>
+                    <p className="text-white/45 text-xs leading-relaxed">{item.desc}</p>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Closing scripture */}
       <section className="py-14 ih-section text-center" aria-label="Closing scripture">
         <div className="max-w-xl mx-auto px-4">
           <ScrollReveal>

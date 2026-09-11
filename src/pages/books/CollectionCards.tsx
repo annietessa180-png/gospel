@@ -108,16 +108,21 @@ export default function CollectionCards() {
                     </div>
                   </div>
 
-                  <Link
-                    to="/devotionals"
-                    className="inline-flex items-center gap-2 text-gold-300 font-bold text-sm hover:text-gold-200 transition-colors group/btn"
-                  >
-                    VIEW BOOK
-                    <ArrowUpRight
-                      size={16}
-                      className="transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
-                    />
-                  </Link>
+                  <div className="flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.68rem] font-bold bg-gold-500/20 text-gold-300 border border-gold-400/30">
+                      Available Now
+                    </span>
+                    <Link
+                      to="/devotionals"
+                      className="inline-flex items-center gap-2 text-gold-300 font-bold text-sm hover:text-gold-200 transition-colors group/btn"
+                    >
+                      VIEW BOOK
+                      <ArrowUpRight
+                        size={16}
+                        className="transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
+                      />
+                    </Link>
+                  </div>
                 </div>
               </div>
             </ScrollReveal>

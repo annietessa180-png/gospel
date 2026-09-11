@@ -9,7 +9,7 @@ type SEOOptions = {
   jsonLd?: Record<string, unknown>;
 };
 
-const BASE_URL = 'https://inhimdaily.com';
+const BASE_URL = 'https://inhimdaily.org';
 const DEFAULT_OG_IMAGE = `${BASE_URL}/images/733127106_122096833941384062_9064072413288732878_n.jpg`;
 
 function setMeta(attr: 'name' | 'property', key: string, content: string) {
