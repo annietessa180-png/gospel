@@ -1,6 +1,6 @@
 import { useEffect, useState, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getSupabaseClient, SUPABASE_URL, SUPABASE_ANON_KEY, fetchUnreadEmailCount, fetchPendingCommentsCount, uploadAttachment, type AttachmentMeta } from '@/lib/supabase';
+import { getSupabaseClient, SUPABASE_URL, fetchUnreadEmailCount, fetchPendingCommentsCount, uploadAttachment, sendEmail as sendEmailRequest, type AttachmentMeta } from '@/lib/supabase';
 import { Users, Mail, Heart, MessageSquare, BookOpen, RefreshCw, Rocket, ExternalLink, CircleCheck as CheckCircle2, CircleAlert as AlertCircle, HandHeart, PenLine, LogOut, Send, Save, Eye, EyeOff, X, Reply, Inbox, Paperclip, Plus, Trash2 } from 'lucide-react';
 
 const BlogAdmin = lazy(() => import('./admin/BlogAdmin'));
@@ -171,27 +171,15 @@ export default function AdminPage() {
     setSending(true);
     setSendResult(null);
     try {
-      const apiUrl = `${SUPABASE_URL}/functions/v1/send-admin-email`;
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-        },
-        body: JSON.stringify({
-          to: composeTo.trim(),
-          subject: composeSubject.trim(),
-          html: buildEmailHtml(composeBody),
-          text: composeBody,
-          attachments,
-          in_reply_to: composeInReplyTo,
-          thread_id: composeThreadId,
-        }),
+      await sendEmailRequest({
+        to: composeTo.trim(),
+        subject: composeSubject.trim(),
+        html: buildEmailHtml(composeBody),
+        text: composeBody,
+        attachments,
+        in_reply_to: composeInReplyTo,
+        thread_id: composeThreadId,
       });
-      const result = await response.json();
-      if (!response.ok || result.error) {
-        throw new Error(result.error ?? `Request failed (${response.status})`);
-      }
       setSendResult({ ok: true, msg: 'Email sent successfully.' });
       setAttachments([]);
       setTimeout(() => setComposeOpen(false), 2000);
@@ -662,7 +650,10 @@ export default function AdminPage() {
                   </div>
                   <p className="text-xs text-white/40 mb-4 -mt-2">
                     Use <code className="text-gold-300 bg-gold-400/10 px-1 rounded">In Him Daily &lt;onboarding@resend.dev&gt;</code> for testing (only sends to your account email).
-                    To send to anyone, verify your domain at resend.com/domains and use an address on that domain.
+                    <strong className="text-white/60"> To send to any address</strong>, verify your domain at <a href="https://resend.com/domains" target="_blank" rel="noopener noreferrer" className="text-gold-300 hover:text-gold-200 underline">resend.com/domains</a> and use an address on that domain, such as <code className="text-gold-300 bg-gold-400/10 px-1 rounded">In Him Daily &lt;noreply@inhimdaily.org&gt;</code>.
+                  </p>
+                  <p className="text-xs text-white/40 mb-4">
+                    For production, prefer setting <code className="text-gold-300 bg-gold-400/10 px-1 rounded">RESEND_API_KEY</code> and <code className="text-gold-300 bg-gold-400/10 px-1 rounded">RESEND_FROM_EMAIL</code> in Netlify &rarr; Site settings &rarr; Environment variables. Those take priority over the values saved here, and keep the key out of the database.
                   </p>
 
                   <button
@@ -694,7 +685,11 @@ export default function AdminPage() {
                       </li>
                       <li className="flex gap-3">
                         <span className="w-5 h-5 rounded-full bg-gold-400/20 text-gold-300 text-[0.7rem] font-bold flex items-center justify-center shrink-0 mt-0.5">4</span>
-                        <span>Click Save. The free sample email will be sent automatically from <code className="text-gold-300 bg-gold-400/10 px-1 rounded text-xs">onboarding@resend.dev</code> until you verify your own domain in Resend.</span>
+                        <span>Click Save. Emails send from <code className="text-gold-300 bg-gold-400/10 px-1 rounded text-xs">onboarding@resend.dev</code>, which only reaches your own Resend account email, until you verify your domain.</span>
+                      </li>
+                      <li className="flex gap-3">
+                        <span className="w-5 h-5 rounded-full bg-gold-400/20 text-gold-300 text-[0.7rem] font-bold flex items-center justify-center shrink-0 mt-0.5">5</span>
+                        <span>In Resend, go to Domains, add <code className="text-gold-300 bg-gold-400/10 px-1 rounded text-xs">inhimdaily.org</code> and add the DNS records it gives you. Once verified, set the From address above to that domain &mdash; you can then email anyone.</span>
                       </li>
                     </ol>
                   </div>

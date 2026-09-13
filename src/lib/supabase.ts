@@ -223,28 +223,45 @@ export async function uploadAttachment(file: File, userId: string): Promise<Atta
   };
 }
 
-export async function sendAdminEmailWithAttachments(payload: {
-  to: string;
+export type SendEmailPayload = {
+  to: string | string[];
   subject: string;
   html: string;
-  text: string;
-  attachments: AttachmentMeta[];
-}) {
-  const apiUrl = `${SUPABASE_URL}/functions/v1/send-admin-email`;
-  const response = await fetch(apiUrl, {
+  text?: string;
+  cc?: string | string[];
+  bcc?: string | string[];
+  replyTo?: string | string[];
+  attachments?: AttachmentMeta[];
+  in_reply_to?: string;
+  thread_id?: string;
+};
+
+/**
+ * Sends an email to any address through Resend, via the /api/send-email Netlify
+ * function. Requires a signed-in admin session — the function verifies the
+ * access token before it will send anything.
+ */
+export async function sendEmail(payload: SendEmailPayload) {
+  const { data: { session } } = await getSupabaseClient().auth.getSession();
+  if (!session) {
+    throw new Error('Your session has expired. Please sign in again.');
+  }
+
+  const response = await fetch('/api/send-email', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      Authorization: `Bearer ${session.access_token}`,
     },
     body: JSON.stringify(payload),
   });
-  const result = await response.json();
+  const result = await response.json().catch(() => ({}));
   if (!response.ok || result.error) {
     throw new Error(result.error ?? `Request failed (${response.status})`);
   }
-  return result;
+  return result as { success: true; id: string | null; message: string };
 }
+
 
 /* ─── blog cover image upload ─────────────────────────────────── */
 
