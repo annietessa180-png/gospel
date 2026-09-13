@@ -9,7 +9,7 @@ const corsHeaders = {
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
 const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-const DEFAULT_FROM_EMAIL = "In Him Daily <onboarding@resend.dev>";
+const DEFAULT_FROM_EMAIL = "In Him Daily <noreply@inhimdaily.org>";
 
 async function getConfig(supabase: ReturnType<typeof createClient>, key: string): Promise<string> {
   const { data, error } = await supabase

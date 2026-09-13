@@ -256,7 +256,7 @@ export default function AdminPage() {
       if (fromData?.value) {
         setResendFromEmail(fromData.value);
       } else {
-        setResendFromEmail('In Him Daily <onboarding@resend.dev>');
+        setResendFromEmail('In Him Daily <noreply@inhimdaily.org>');
       }
     } catch {
       setResendStatus('not_configured');
@@ -290,7 +290,7 @@ export default function AdminPage() {
       }
 
       // Save from email
-      const fromVal = resendFromEmail.trim() || 'In Him Daily <onboarding@resend.dev>';
+      const fromVal = resendFromEmail.trim() || 'In Him Daily <noreply@inhimdaily.org>';
       const { data: existingFrom } = await supabase
         .from('app_config')
         .select('key')
@@ -649,8 +649,7 @@ export default function AdminPage() {
                     />
                   </div>
                   <p className="text-xs text-white/40 mb-4 -mt-2">
-                    Use <code className="text-gold-300 bg-gold-400/10 px-1 rounded">In Him Daily &lt;onboarding@resend.dev&gt;</code> for testing (only sends to your account email).
-                    <strong className="text-white/60"> To send to any address</strong>, verify your domain at <a href="https://resend.com/domains" target="_blank" rel="noopener noreferrer" className="text-gold-300 hover:text-gold-200 underline">resend.com/domains</a> and use an address on that domain, such as <code className="text-gold-300 bg-gold-400/10 px-1 rounded">In Him Daily &lt;noreply@inhimdaily.org&gt;</code>.
+                    Your domain <code className="text-gold-300 bg-gold-400/10 px-1 rounded">inhimdaily.org</code> is verified with Resend. Use <code className="text-gold-300 bg-gold-400/10 px-1 rounded">In Him Daily &lt;noreply@inhimdaily.org&gt;</code> to send emails to any address.
                   </p>
                   <p className="text-xs text-white/40 mb-4">
                     For production, prefer setting <code className="text-gold-300 bg-gold-400/10 px-1 rounded">RESEND_API_KEY</code> and <code className="text-gold-300 bg-gold-400/10 px-1 rounded">RESEND_FROM_EMAIL</code> in Netlify &rarr; Site settings &rarr; Environment variables. Those take priority over the values saved here, and keep the key out of the database.
@@ -685,7 +684,7 @@ export default function AdminPage() {
                       </li>
                       <li className="flex gap-3">
                         <span className="w-5 h-5 rounded-full bg-gold-400/20 text-gold-300 text-[0.7rem] font-bold flex items-center justify-center shrink-0 mt-0.5">4</span>
-                        <span>Click Save. Emails send from <code className="text-gold-300 bg-gold-400/10 px-1 rounded text-xs">onboarding@resend.dev</code>, which only reaches your own Resend account email, until you verify your domain.</span>
+                        <span>Click Save. Emails send from <code className="text-gold-300 bg-gold-400/10 px-1 rounded text-xs">noreply@inhimdaily.org</code> and can reach any address.</span>
                       </li>
                       <li className="flex gap-3">
                         <span className="w-5 h-5 rounded-full bg-gold-400/20 text-gold-300 text-[0.7rem] font-bold flex items-center justify-center shrink-0 mt-0.5">5</span>
