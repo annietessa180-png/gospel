@@ -1,0 +1,218 @@
+import type { Config, Context } from '@netlify/functions';
+import { Resend } from 'resend';
+
+/**
+ * Sends an email to any address through Resend.
+ *
+ * POST /api/send-email
+ *   Authorization: Bearer <Supabase access token of a signed-in admin>
+ *   { to, subject, html, text?, cc?, bcc?, replyTo?, attachments?, in_reply_to?, thread_id? }
+ *
+ * Configuration is read from Netlify environment variables first
+ * (RESEND_API_KEY, RESEND_FROM_EMAIL) and falls back to the values saved in
+ * the app_config table from the admin dashboard's Email Settings tab.
+ */
+
+const DEFAULT_FROM_EMAIL = 'In Him Daily <onboarding@resend.dev>';
+
+// Public project values — also present in src/lib/supabase.ts.
+const FALLBACK_SUPABASE_URL = 'https://iupspzfbhxfikxjleizd.supabase.co';
+const FALLBACK_SUPABASE_ANON_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1cHNwemZiaHhmaWt4amxlaXpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3MjYzMTQsImV4cCI6MjEwMzMwMjMxNH0.Gws16H9Bp5Hga_OdsTE51SJmO7AjkPvRM043N0M0AP4';
+
+interface AttachmentMeta {
+  filename: string;
+  url: string;
+  content_type?: string;
+  size?: number;
+}
+
+interface RequestBody {
+  to: string | string[];
+  subject: string;
+  html: string;
+  text?: string;
+  cc?: string | string[];
+  bcc?: string | string[];
+  replyTo?: string | string[];
+  attachments?: AttachmentMeta[];
+  in_reply_to?: string;
+  thread_id?: string;
+}
+
+function json(body: unknown, status: number) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
+function supabaseConfig() {
+  return {
+    url: Netlify.env.get('SUPABASE_URL') ?? Netlify.env.get('VITE_SUPABASE_URL') ?? FALLBACK_SUPABASE_URL,
+    anonKey:
+      Netlify.env.get('SUPABASE_ANON_KEY') ??
+      Netlify.env.get('VITE_SUPABASE_ANON_KEY') ??
+      FALLBACK_SUPABASE_ANON_KEY,
+  };
+}
+
+/** Confirms the bearer token belongs to a signed-in Supabase user. */
+async function verifyAdmin(token: string): Promise<{ id: string; email?: string } | null> {
+  const { url, anonKey } = supabaseConfig();
+  const response = await fetch(`${url}/auth/v1/user`, {
+    headers: { apikey: anonKey, Authorization: `Bearer ${token}` },
+  });
+  if (!response.ok) return null;
+  const user = (await response.json()) as { id?: string; email?: string };
+  return user?.id ? { id: user.id, email: user.email } : null;
+}
+
+/** Reads a value from app_config using the admin's own token (RLS allows authenticated reads). */
+async function getConfigValue(key: string, token: string): Promise<string> {
+  const { url, anonKey } = supabaseConfig();
+  try {
+    const response = await fetch(
+      `${url}/rest/v1/app_config?select=value&key=eq.${encodeURIComponent(key)}&limit=1`,
+      { headers: { apikey: anonKey, Authorization: `Bearer ${token}` } },
+    );
+    if (!response.ok) return '';
+    const rows = (await response.json()) as { value?: string }[];
+    return rows?.[0]?.value?.trim() ?? '';
+  } catch {
+    return '';
+  }
+}
+
+/** Records the sent message in admin_emails so it shows up in the Inbox thread. */
+async function logOutboundEmail(
+  token: string,
+  record: Record<string, unknown>,
+): Promise<void> {
+  const { url, anonKey } = supabaseConfig();
+  try {
+    await fetch(`${url}/rest/v1/admin_emails`, {
+      method: 'POST',
+      headers: {
+        apikey: anonKey,
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify(record),
+    });
+  } catch (err) {
+    console.error('Could not record the outbound email:', err);
+  }
+}
+
+const EMAIL_PATTERN = /^[^\s@,<>]+@[^\s@,<>]+\.[^\s@,<>]+$/;
+
+/** Accepts a single address or a list and returns the clean, valid ones. */
+function normalizeRecipients(value: string | string[] | undefined): string[] {
+  if (!value) return [];
+  const candidates = Array.isArray(value) ? value : value.split(',');
+  return candidates.map((entry) => entry.trim()).filter((entry) => EMAIL_PATTERN.test(entry));
+}
+
+export default async (req: Request, _context: Context) => {
+  if (req.method !== 'POST') {
+    return json({ error: 'Method not allowed.' }, 405);
+  }
+
+  const token = req.headers.get('authorization')?.replace(/^Bearer\s+/i, '').trim();
+  if (!token) {
+    return json({ error: 'You must be signed in to send email.' }, 401);
+  }
+
+  const admin = await verifyAdmin(token);
+  if (!admin) {
+    return json({ error: 'Your session has expired. Please sign in again.' }, 401);
+  }
+
+  let body: RequestBody;
+  try {
+    body = (await req.json()) as RequestBody;
+  } catch {
+    return json({ error: 'Could not read the request body.' }, 400);
+  }
+
+  const to = normalizeRecipients(body.to);
+  if (to.length === 0) {
+    return json({ error: 'A valid recipient email address is required.' }, 400);
+  }
+  if (!body.subject?.trim() || !body.html?.trim()) {
+    return json({ error: 'Subject and message body are required.' }, 400);
+  }
+
+  const apiKey = Netlify.env.get('RESEND_API_KEY') ?? (await getConfigValue('RESEND_API_KEY', token));
+  if (!apiKey) {
+    return json(
+      {
+        error:
+          'Email service is not configured. Add RESEND_API_KEY as a Netlify environment variable, or save your Resend API key in Email Settings.',
+      },
+      503,
+    );
+  }
+
+  const fromEmail =
+    Netlify.env.get('RESEND_FROM_EMAIL') ||
+    (await getConfigValue('RESEND_FROM_EMAIL', token)) ||
+    DEFAULT_FROM_EMAIL;
+
+  const cc = normalizeRecipients(body.cc);
+  const bcc = normalizeRecipients(body.bcc);
+  const replyTo = normalizeRecipients(body.replyTo);
+
+  try {
+    const resend = new Resend(apiKey);
+    const { data, error } = await resend.emails.send({
+      from: fromEmail,
+      to,
+      subject: body.subject.trim(),
+      html: body.html,
+      ...(body.text ? { text: body.text } : {}),
+      ...(cc.length > 0 ? { cc } : {}),
+      ...(bcc.length > 0 ? { bcc } : {}),
+      ...(replyTo.length > 0 ? { replyTo } : {}),
+      ...(body.attachments?.length
+        ? {
+            attachments: body.attachments.map((attachment) => ({
+              filename: attachment.filename,
+              path: attachment.url,
+            })),
+          }
+        : {}),
+    });
+
+    if (error) {
+      console.error('Resend rejected the message:', error);
+      return json({ error: error.message ?? 'The email service returned an error.' }, 502);
+    }
+
+    await logOutboundEmail(token, {
+      direction: 'outbound',
+      from_email: fromEmail,
+      from_name: 'In Him Daily',
+      to_email: to.join(', '),
+      subject: body.subject.trim(),
+      body_text: body.text ?? null,
+      body_html: body.html,
+      attachments: body.attachments ?? [],
+      status: 'sent',
+      in_reply_to: body.in_reply_to ?? null,
+      thread_id: body.thread_id ?? crypto.randomUUID(),
+      source: 'admin_compose',
+    });
+
+    return json({ success: true, id: data?.id ?? null, message: 'Email sent successfully.' }, 200);
+  } catch (err) {
+    console.error('Unexpected error while sending email:', err);
+    return json({ error: 'Could not send the email. Please try again.' }, 500);
+  }
+};
+
+export const config: Config = {
+  path: '/api/send-email',
+};
