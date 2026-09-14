@@ -109,7 +109,7 @@ export default function AboutPage() {
           </ScrollReveal>
           <div className="grid md:grid-cols-3 gap-5 mb-14">
             {[
-              { number:'240+', label:'Days of Content', sub:'Across two complete series' },
+              { number:'600+', label:'Days of Content', sub:'Across six complete volumes' },
               { number:'3',    label:'Generational Voices', sub:'Adult, Teen, Children' },
               { number:'1',    label:'Shared Encounter', sub:'One Jesus, every family' },
             ].map((s,i)=>(
