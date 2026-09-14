@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Heart, HandHeart, Check, Globe, Shield, Mail } from 'lucide-react';
+import { Heart, HandHeart, Check, Globe, Shield, Mail, Copy, Smartphone, Building2, CreditCard, Wallet, ArrowRight } from 'lucide-react';
 import { useSEO } from '@/hooks/useSEO';
 import ScrollReveal from '@/components/ScrollReveal';
 import LocationFields, { type LocationData } from '@/components/LocationFields';
@@ -8,10 +8,52 @@ import { insertDonation } from '@/lib/supabase';
 const PRESET_AMOUNTS = [5, 10, 25, 50, 100];
 
 const paymentMethods = [
-  { label: 'Credit / Debit Card', desc: 'Visa, Mastercard, American Express', icon: 'card' },
-  { label: 'M-Pesa', desc: 'Safaricom M-Pesa (Kenya)', icon: 'phone' },
-  { label: 'Bank Transfer', desc: 'Direct bank transfer — details emailed to you', icon: 'bank' },
-  { label: 'PayPal', desc: 'Pay with your PayPal balance or linked card', icon: 'paypal' },
+  {
+    id: 'mpesa',
+    label: 'M-Pesa',
+    desc: 'Safaricom M-Pesa (Kenya)',
+    icon: Smartphone,
+    color: '#25D366',
+    details: [
+      { label: 'Paybill', value: '4090330' },
+      { label: 'Account', value: 'DONATE' },
+    ],
+  },
+  {
+    id: 'bank',
+    label: 'Bank Transfer',
+    desc: 'Direct bank transfer',
+    icon: Building2,
+    color: '#3B82F6',
+    details: [
+      { label: 'Bank', value: 'Equity Bank Kenya' },
+      { label: 'Account Name', value: 'Epic True North' },
+      { label: 'Account No.', value: '0490293847562' },
+      { label: 'Swift Code', value: 'EQBLKENA' },
+    ],
+  },
+  {
+    id: 'paypal',
+    label: 'PayPal',
+    desc: 'Pay with PayPal balance or card',
+    icon: Wallet,
+    color: '#00457C',
+    details: [
+      { label: 'PayPal', value: 'hello@inhimdaily.org' },
+    ],
+    link: 'https://www.paypal.com/paypalme/inhimdaily',
+  },
+  {
+    id: 'card',
+    label: 'Credit / Debit Card',
+    desc: 'Visa, Mastercard, Amex',
+    icon: CreditCard,
+    color: '#C9983A',
+    details: [
+      { label: 'Status', value: 'Available via PayPal link' },
+    ],
+    link: 'https://www.paypal.com/paypalme/inhimdaily',
+  },
 ];
 
 export default function DonatePage() {
@@ -31,6 +73,7 @@ export default function DonatePage() {
   const [message, setMessage]     = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [formError, setFormError] = useState('');
+  const [copiedField, setCopiedField] = useState('');
 
   const inputCls = "w-full px-5 py-3.5 rounded-xl ih-input text-white placeholder-white/35 transition-colors text-sm";
 
@@ -42,6 +85,12 @@ export default function DonatePage() {
   function handleCustom(val: string) {
     setCustom(val);
     setAmount(val ? parseFloat(val) : '');
+  }
+
+  function copyToClipboard(text: string, fieldId: string) {
+    navigator.clipboard.writeText(text);
+    setCopiedField(fieldId);
+    setTimeout(() => setCopiedField(''), 2000);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -94,6 +143,14 @@ export default function DonatePage() {
             In Him Daily is a ministry of Epic True North, based in Nairobi, Kenya. Every gift — large or small — helps us
             create Christ-centred devotionals, distribute free samples, and build communities where families encounter Jesus together.
           </p>
+          <div className="mt-8">
+            <a href="#donate-now"
+              onClick={(e) => { e.preventDefault(); document.getElementById('donate-now')?.scrollIntoView({ behavior: 'smooth' }); }}
+              className="inline-flex items-center gap-2 px-8 py-4 ih-btn-gold text-[0.9rem]">
+              <Heart size={16} aria-hidden="true" />
+              Donate Now
+            </a>
+          </div>
         </div>
       </section>
 
@@ -124,8 +181,72 @@ export default function DonatePage() {
         </div>
       </section>
 
+      {/* Payment Methods */}
+      <section className="py-16 ih-section" aria-labelledby="payment-heading">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal className="text-center mb-10">
+            <p className="ih-eyebrow mb-3">Ways to Give</p>
+            <h2 id="payment-heading" className="font-playfair text-2xl md:text-3xl font-bold text-white mb-4">Payment Options</h2>
+            <p className="text-white/55 text-sm max-w-xl mx-auto">Choose the method that works best for you. All gifts are received with gratitude.</p>
+          </ScrollReveal>
+          <div className="grid sm:grid-cols-2 gap-5">
+            {paymentMethods.map((m, i) => (
+              <ScrollReveal key={m.id} delay={i * 80}>
+                <div className="p-6 rounded-2xl ih-card h-full">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${m.color}15`, border: `1px solid ${m.color}30` }}>
+                      <m.icon size={20} style={{ color: m.color }} aria-hidden="true" />
+                    </div>
+                    <div>
+                      <h3 className="font-playfair text-lg font-bold text-white">{m.label}</h3>
+                      <p className="text-white/45 text-xs">{m.desc}</p>
+                    </div>
+                  </div>
+                  <div className="space-y-2.5">
+                    {m.details.map((d) => (
+                      <div key={d.label} className="flex items-center justify-between gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+                        <div className="min-w-0">
+                          <p className="text-[0.65rem] font-semibold text-white/40 uppercase tracking-wider">{d.label}</p>
+                          <p className="text-sm text-white/80 font-mono mt-0.5 truncate">{d.value}</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => copyToClipboard(d.value, `${m.id}-${d.label}`)}
+                          className="p-2 rounded-lg text-white/40 hover:text-gold-300 hover:bg-white/5 transition-colors shrink-0"
+                          aria-label={`Copy ${d.label}`}
+                        >
+                          {copiedField === `${m.id}-${d.label}` ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  {m.link && (
+                    <a href={m.link} target="_blank" rel="noopener noreferrer"
+                      className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-gold-300 hover:text-gold-200 transition-colors">
+                      {m.id === 'paypal' ? 'Pay with PayPal' : 'Pay via PayPal'} <ArrowRight size={14} aria-hidden="true" />
+                    </a>
+                  )}
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+          <ScrollReveal className="mt-8">
+            <div className="p-5 rounded-xl bg-gold-400/8 border border-gold-400/20 text-center">
+              <p className="text-sm text-white/70 leading-relaxed">
+                After making your donation, please{' '}
+                <a href="#donate-now" onClick={(e) => { e.preventDefault(); document.getElementById('donate-now')?.scrollIntoView({ behavior: 'smooth' }); }}
+                  className="text-gold-300 font-semibold hover:text-gold-200 transition-colors">
+                  fill out the form below
+                </a>
+                {' '}so we can confirm your gift and pray over any requests you share with us.
+              </p>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
       {/* Donation Form / Thank You */}
-      <section className="py-20 ih-section" aria-label="Donation form">
+      <section id="donate-now" className="py-20 ih-section scroll-mt-20" aria-label="Donation form">
         <div className="max-w-xl mx-auto px-4 sm:px-6">
           <ScrollReveal>
             {submitted ? (
@@ -162,8 +283,10 @@ export default function DonatePage() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="ih-card p-8 space-y-5" noValidate>
-                <h2 className="font-playfair text-2xl font-bold text-white mb-1">Make a Donation</h2>
-                <p className="text-white/55 text-sm mb-2">Every gift helps families encounter Jesus daily.</p>
+                <div className="text-center mb-2">
+                  <h2 className="font-playfair text-2xl font-bold text-white mb-1">Make a Donation</h2>
+                  <p className="text-white/55 text-sm">Every gift helps families encounter Jesus daily.</p>
+                </div>
 
                 {/* Amount selection */}
                 <div>
@@ -194,27 +317,6 @@ export default function DonatePage() {
                       aria-label="Custom donation amount"
                     />
                   </div>
-                </div>
-
-                {/* Payment method info */}
-                <div>
-                  <label className="block text-[0.72rem] font-semibold text-white/50 mb-2 tracking-wider uppercase">Payment Methods</label>
-                  <div className="grid sm:grid-cols-2 gap-2.5">
-                    {paymentMethods.map((m) => (
-                      <div key={m.label} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
-                        <div className="w-8 h-8 rounded-lg bg-gold-400/15 flex items-center justify-center shrink-0">
-                          <Check size={14} className="text-gold-300" aria-hidden="true" />
-                        </div>
-                        <div>
-                          <p className="text-white text-xs font-semibold">{m.label}</p>
-                          <p className="text-white/40 text-[0.68rem]">{m.desc}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-white/35 text-xs mt-2 flex items-center gap-1.5">
-                    <Shield size={11} aria-hidden="true" /> After submitting, you will receive an email with secure payment instructions for your preferred method.
-                  </p>
                 </div>
 
                 {/* Name & Email */}
@@ -255,12 +357,12 @@ export default function DonatePage() {
                 <button type="submit" className="w-full py-4 ih-btn-gold text-[0.9rem]">
                   <span className="inline-flex items-center gap-2 justify-center">
                     <Heart size={16} aria-hidden="true" />
-                    {amount ? `Donate $${amount}` : 'Donate Now'}
+                    {amount ? `Donate $${amount} Now` : 'Donate Now'}
                   </span>
                 </button>
                 {formError && <p className="text-red-400 text-xs text-center">{formError}</p>}
                 <p className="text-white/30 text-xs text-center flex items-center justify-center gap-1.5">
-                  <Shield size={11} aria-hidden="true" /> Your donation supports the ministry of In Him Daily. You will receive a confirmation email.
+                  <Shield size={11} aria-hidden="true" /> Your information is never shared or sold. You will receive a confirmation email.
                 </p>
               </form>
             )}

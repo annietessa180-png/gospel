@@ -55,6 +55,7 @@ export function useSEO({ title, description, canonicalPath, ogImage, ogType, jso
 
     setMeta('property', 'og:title', fullTitle);
     setMeta('name', 'twitter:title', fullTitle);
+    setMeta('property', 'og:site_name', 'In Him Daily');
 
     if (canonicalPath) {
       setCanonical(`${BASE_URL}${canonicalPath}`);
