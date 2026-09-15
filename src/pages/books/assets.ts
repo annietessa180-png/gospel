@@ -70,11 +70,11 @@ export const collections: Collection[] = [
     scripture: 'Meeting Jesus throughout Scripture',
     days: 120,
     description: 'A 120-day journey tracing the promise of a Saviour from Genesis to Revelation, revealing Christ on every page.',
-    cover: '/images/books/he_was_always_the_answer(adult_version).png',
+    cover: '/images/books/he_was_always_the_answer(adult_version) copy.png',
     editions: {
-      kids: { cover: '/images/books/he_was_always_the_answer(kids_version).png', usd: '$8', kes: 'KES 1,080' },
-      teen: { cover: '/images/books/he_was_always_the_answer(teen_version).png', usd: '$10', kes: 'KES 1,350' },
-      adult: { cover: '/images/books/he_was_always_the_answer(adult_version).png', usd: '$12', kes: 'KES 1,600' },
+      kids: { cover: '/images/books/he_was_always_the_answer(kids_version) copy.png', usd: '$8', kes: 'KES 1,080' },
+      teen: { cover: '/images/books/he_was_always_the_answer(teen_version) copy.png', usd: '$10', kes: 'KES 1,350' },
+      adult: { cover: '/images/books/he_was_always_the_answer(adult_version) copy.png', usd: '$12', kes: 'KES 1,600' },
     },
   },
   {
@@ -84,11 +84,11 @@ export const collections: Collection[] = [
     scripture: 'Genesis & Exodus',
     days: 100,
     description: 'Walk through the foundations of Scripture and see the Lamb slain before the foundation of the world.',
-    cover: '/images/books/in_the_begining_he_was_there(adult_version) copy.png',
+    cover: '/images/books/in_the_begining_he_was_there(adult_version) copy 2.png',
     editions: {
-      kids: { cover: '/images/books/in_the_begining_he_was_there(kids_version) copy.png', usd: '$8', kes: 'KES 1,080' },
-      teen: { cover: '/images/books/in_the_begining_he_was_there(teen_version) copy.png', usd: '$10', kes: 'KES 1,350' },
-      adult: { cover: '/images/books/in_the_begining_he_was_there(adult_version) copy.png', usd: '$12', kes: 'KES 1,600' },
+      kids: { cover: '/images/books/in_the_begining_he_was_there(kids_version) copy 2.png', usd: '$8', kes: 'KES 1,080' },
+      teen: { cover: '/images/books/in_the_begining_he_was_there(teen_version) copy 2.png', usd: '$10', kes: 'KES 1,350' },
+      adult: { cover: '/images/books/in_the_begining_he_was_there(adult_version) copy 2.png', usd: '$12', kes: 'KES 1,600' },
     },
   },
   {
@@ -112,11 +112,11 @@ export const collections: Collection[] = [
     scripture: 'The Songbook of the King',
     days: 82,
     description: 'Hear the voice of the Shepherd-King in every psalm, from the cross-shaped cries of David to the praises of Zion.',
-    cover: '/images/books/he_sang_about_himself(adult_version).png',
+    cover: '/images/books/he_sang_about_himself(adult_version) copy.png',
     editions: {
-      kids: { cover: '/images/books/he_sang_about_himself_(kids_version).png', usd: '$8', kes: 'KES 1,080' },
-      teen: { cover: '/images/books/he_sang_about_himself(teen_version).png', usd: '$10', kes: 'KES 1,350' },
-      adult: { cover: '/images/books/he_sang_about_himself(adult_version).png', usd: '$12', kes: 'KES 1,600' },
+      kids: { cover: '/images/books/he_sang_about_himself_(kids_version) copy.png', usd: '$8', kes: 'KES 1,080' },
+      teen: { cover: '/images/books/he_sang_about_himself(teen_version) copy.png', usd: '$10', kes: 'KES 1,350' },
+      adult: { cover: '/images/books/he_sang_about_himself(adult_version) copy.png', usd: '$12', kes: 'KES 1,600' },
     },
   },
   {
@@ -129,7 +129,7 @@ export const collections: Collection[] = [
     cover: '/images/books/everywhere_i_look_its_him(adult_version).png',
     editions: {
       kids: { cover: '/images/books/everywhere_i_look_its_him(kids_version).png', usd: '$8', kes: 'KES 1,080' },
-      teen: { cover: '/images/books/everywhere_i_look_its_him(teen_version).png', usd: '$10', kes: 'KES 1,350' },
+      teen: { cover: '/images/books/everywhere_i_look_its_him(teen_version) copy.png', usd: '$10', kes: 'KES 1,350' },
       adult: { cover: '/images/books/everywhere_i_look_its_him(adult_version).png', usd: '$12', kes: 'KES 1,600' },
     },
   },
@@ -140,11 +140,11 @@ export const collections: Collection[] = [
     scripture: 'The Prophet Like Moses',
     days: 120,
     description: 'Listen to the sermons of Moses and hear the heartbeat of the Prophet who would one day stand on the mountain.',
-    cover: '/images/books/he_spoke_before_he_came(adult_version) copy.png',
+    cover: '/images/books/he_spoke_before_he_came(adult_version) copy 2.png',
     editions: {
-      kids: { cover: '/images/books/he_spoke_before_he_came(kids_version) copy.png', usd: '$8', kes: 'KES 1,080' },
-      teen: { cover: '/images/books/he_spoke_before_he_came(teen_version) copy.png', usd: '$10', kes: 'KES 1,350' },
-      adult: { cover: '/images/books/he_spoke_before_he_came(adult_version) copy.png', usd: '$12', kes: 'KES 1,600' },
+      kids: { cover: '/images/books/he_spoke_before_he_came(kids_version) copy 2.png', usd: '$8', kes: 'KES 1,080' },
+      teen: { cover: '/images/books/he_spoke_before_he_came(teen_version) copy 2.png', usd: '$10', kes: 'KES 1,350' },
+      adult: { cover: '/images/books/he_spoke_before_he_came(adult_version) copy 2.png', usd: '$12', kes: 'KES 1,600' },
     },
   },
 ];
