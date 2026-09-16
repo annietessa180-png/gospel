@@ -39,14 +39,14 @@ export default function CollectionCards() {
                       const ed = c.editions[key];
                       return (
                         <div key={key} className="flex-1 max-w-[33%]">
-                          <div className="aspect-[2/3] overflow-hidden rounded-lg">
+                          <div className="aspect-[2/3] overflow-hidden rounded-lg bg-gradient-to-br from-white/[0.03] to-white/[0.01] flex items-center justify-center">
                             <img
                               src={ed.cover}
                               alt={`${c.title} — ${editionLabels[key]} Edition`}
                               loading="lazy"
                               decoding="async"
-                              className="block w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                              style={{ filter: 'brightness(1.2) contrast(1.1)' }}
+                              className="block w-full h-full object-contain transition-transform duration-500 group-hover:scale-[1.03]"
+                              style={{ filter: 'brightness(1.15) contrast(1.05)' }}
                             />
                           </div>
                           <p className="text-center text-[#D0D3D8] text-xs font-semibold mt-2">
